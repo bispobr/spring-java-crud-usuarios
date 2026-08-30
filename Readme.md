@@ -1,113 +1,205 @@
-# API REST cadastro de usuário
+# API REST de Cadastro de Usuários
 
-## Descrição
+API REST desenvolvida com Java e Spring Boot para gerenciamento de usuários, disponibilizando operações de CRUD e consultas por diferentes critérios.
 
- API REST  desenvolvida para o cadastro de usuários por meio de dois campos: nome e e-mail. Ela oferece suporte às operações básicas de um CRUD, incluindo:
-- **Listagem de usuários cadastrados, com possibilidade de busca por ID, e-mail ou listagem geral** 
-- **Listagem** Dos usuarios cadastrados podendo ser traves do id, email ou uma simples busca por todos os usuarios cadastrados.
-- **Atualização de um usuário existente** 
-- **Exclusão de um usuário existente** 
+O projeto também demonstra práticas comuns no desenvolvimento de APIs REST, como tratamento global de exceções, documentação com Swagger/OpenAPI, monitoramento com Actuator, logging e execução em Docker.
 
-## Tecnologias Utilizadas
+## Funcionalidades
 
-- **Java + Spring Boot** – Framework principal para o desenvolvimento da aplicação
-- **Lombok (@Slf4j)** – Facilita a geração e o gerenciamento de logs
-- **Tratamento de Exceções** - @RestControllerAdvice Centraliza o tratamento de erros da aplicação
-- **Swagger** – Documentação interativa da API
-- **Spring Boot Actuator** – Monitoramento e verificação da saúde da aplicação
-- **H2 database** – Banco de dados relacional em memória
-- **Docker** – Criação, empacotamento e execução da aplicação em contêineres.
+- Cadastro de usuários
+- Listagem de todos os usuários
+- Consulta de usuário por ID
+- Consulta de usuário por e-mail
+- Atualização de usuário
+- Exclusão de usuário por ID
+- Exclusão de usuário por e-mail
+- Validação dos dados de entrada
+- Tratamento global de exceções
+- Logging
+- Documentação da API com Swagger/OpenAPI
+- Monitoramento com Spring Boot Actuator
+- Persistência com H2 Database
+- Execução em container Docker
 
+## Tecnologias
+
+- Java 25
+- Spring Boot
+- Spring Web
+- Spring Validation
+- Spring Boot Actuator
+- Swagger/OpenAPI
+- H2 Database
+- Lombok
+- Maven
+- Docker
 
 ## Requisitos
 
-- Java 25
+- Java 25+
 - Maven
+- Docker (opcional)
 
+## Executando o projeto
 
-## Executando o Projeto
-
-1. Clone o repositório:
-
-```bash
-git https://github.com/bispobr/spring-java-crud-usuarios.git
-```
-
-## Como usar
-
-1. Inicie a aplicação
-2. A API está acessível através do endereço http://localhost:8080
-3. A documentação da API está acessível através do Link http://localhost:8080/swagger-ui/index.html#/
-4. O endpoint de saúde e métricas do Actuator está acessível através do Link http://localhost:8080/actuator/health
-
-## Como Rodar em um Container (Opcional)
-
-1. Construa o projeto
+Clone o repositório:
 
 ```bash
-mvn clean package 
+git clone https://github.com/bispobr/spring-java-crud-usuarios.git
+cd spring-java-crud-usuarios
 ```
 
-2. Gere a Imagem Docker, com o Docker  instalado execute:
-
+Execute a aplicação com Maven:
 
 ```bash
-docker build -t demo . 
+mvn spring-boot:run
 ```
 
-3. Execute o Container
+A API estará disponível em:
+
+```text
+http://localhost:8080
+```
+
+## Swagger / OpenAPI
+
+Com a aplicação em execução, acesse a documentação interativa:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+## Actuator
+
+Endpoint de saúde da aplicação:
+
+```text
+http://localhost:8080/actuator/health
+```
+
+## API Endpoints
+
+### Cadastrar usuário
+
+```http
+POST /usuario/Cadastro
+Content-Type: application/json
+```
+
+Exemplo:
+
+```json
+{
+  "email": "usuario@example.com",
+  "nome": "João da Silva"
+}
+```
+
+| Parâmetro | Tipo | Descrição |
+|---|---|---|
+| `email` | `String` | E-mail do usuário. |
+| `nome` | `String` | Nome do usuário. |
+
+### Listar usuários
+
+```http
+GET /usuario/listar
+```
+
+Retorna os usuários cadastrados.
+
+### Buscar usuário por ID
+
+```http
+GET /usuario/listar/{id}
+```
+
+Retorna o usuário correspondente ao identificador informado.
+
+### Buscar usuário por e-mail
+
+```http
+GET /usuario/ListarPorEmail?email={email}
+```
+
+Retorna o usuário correspondente ao e-mail informado.
+
+### Atualizar usuário
+
+```http
+PUT /usuario/atualizar/{id}
+Content-Type: application/json
+```
+
+Exemplo:
+
+```json
+{
+  "email": "usuario@example.com",
+  "nome": "João da Silva"
+}
+```
+
+### Remover usuário por ID
+
+```http
+DELETE /usuario/RemoverPorid/{id}
+```
+
+### Remover usuário por e-mail
+
+```http
+DELETE /usuario/RemoverPorEmail?email={email}
+```
+
+## Fluxo simplificado
+
+```text
+Cliente
+   │
+   ▼
+API REST
+   │
+   ├── Cadastro
+   ├── Consulta
+   ├── Atualização
+   └── Exclusão
+          │
+          ▼
+     Persistência
+          │
+          ▼
+     H2 Database
+```
+
+## Docker
+
+Gere o pacote da aplicação:
+
+```bash
+mvn clean package
+```
+
+Gere a imagem Docker:
+
+```bash
+docker build -t demo .
+```
+
+Execute o container:
 
 ```bash
 docker run -p 8080:8080 demo
 ```
 
-## API Endpoints
-API contem os seguintes endpoints:
+## Testes
 
-```http request
-POST /usuario/Cadastro - Cadastra um novo usuario
-Content-Type: application/json
+Execute os testes automatizados com:
 
-{
-  "email": "xxxxxx",
-  "nome": 00000
-}
-```
-| Parâmetro | Tipo     | Descrição                           |
-|:----------|:---------| :---------------------------------- |
-| `email`   | `String` | **Obrigatório**. O email do usuário 
-| `nome`    | `String` | **Obrigatório**. O nome do usuário 
-
-
-```http request
-GET /usuario/listar -  Lista todos os Usuários
+```bash
+mvn test
 ```
 
-```http request
-GET /usuario/listar -  Lista Usuário por id
-```
+## Status
 
-
-```http request
-GET /usuario/ListarPorEmail -  Lista Usuário por id
-```
-
-
-
-```http request
-PUT /usuario/atualizar/ - Atualizar um usuário existente
-Content-Type: application/json
-
-{
- "email": "xxxxxx",
-  "nome": 00000
-}
-```
-```http request
-DELETE /usuario/RemoverPorid - Remover usuário de id especificado.
-```
-
-```http request
-DELETE /usuario/RemoverPorEmail - Remover usuário do email  especificado.
-```
-
+Projeto desenvolvido para praticar a construção de APIs REST com Spring Boot, operações CRUD, validação, tratamento de exceções, logging, documentação OpenAPI, monitoramento e execução em containers.
